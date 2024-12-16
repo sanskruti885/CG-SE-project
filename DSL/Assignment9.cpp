@@ -1,77 +1,68 @@
-// In any language program mostly syntax error occurs due to unbalancing delimiter 
-// such as (), {}, []. Write C++ program using stack to check whether given expression 
-// is well parenthesized or not.
-
 #include<iostream>
-#include<cstring>
 using namespace std;
 
-#define MAX 100
+const int max_size = 100;
 class Stack{
     public:
-        int top;
-        char a[MAX];
-    
-    Stack(){
-        top=-1;
+    char arr[max_size];
+    int top=-1;
+
+    bool isEmpty(){
+        return top==-1;
     }
-    bool isEmpty();
-    bool isFull();
-    bool push(char x);
-    char pop();
-    char peek();
+    bool isFull(){
+        return top == max_size-1;
+    }
+    char pop(){
+        if(isEmpty()){
+            cout<<"\nUnderflow";
+            return '\0';
+        }
+        else{
+            return arr[top--];
+        }
+    }
+    bool push(char data){
+        if(isFull()) return false;
+        else{
+            arr[++top] = data;
+            return true;
+        } 
+    }
+
 };
-
-bool Stack::isEmpty(){
-    return top==-1;
-}
-bool Stack ::isFull(){
-    return top==MAX-1;
-}
-char Stack::pop(){
-    if(isEmpty())
-    return 0;
-    else
-    return a[top--];
-}
-bool Stack::push(char x){
-    if(isFull()) return false;
-    else {
-        a[++top] = x;
-        return true;
-    }
-
-}
-
 int main(){
     Stack s;
-    string str;
-    cout<<"Enter string: ";
-    cin>>str;
-    int flag=0;
-    for(int i=0;i<str.length();i++){
-        if(str[i] == '{' || str[i] == '(' || str[i] == '['){
-            s.push(str[i]);
-        }
-        if(str[i] == '}' || str[i] == '}' || str[i] == '}'){
-            char t = s.pop();
-            if(str[i] == '}' and t == '{') 
-            continue;
-             if(str[i] == ')' and t == '(') 
-            continue;
-             if(str[i] == ']' and t == '[') 
-            continue;
+    int flag =0;
+    string exp;
+    cout<<"\nEnter expression: ";
+    cin>>exp;
 
-            flag=1; //mismatch
-            break;
+    for(int i=0;i<exp.length();i++){
+        if(exp[i] == '(' || exp[i]=='{' || exp[i]=='['){
+            s.push(exp[i]);
+        }
+        else{
+            if(exp[i] == ')' || exp[i] == '}' || exp[i]==']'){
+               char top = s.pop();
+               if(exp[i] == ')' && top == '(')
+               continue;
+               if(exp[i] == '}' && top == '{')
+               continue;
+               if(exp[i] == ']' && top=='[')
+               continue;
+
+               flag = 1;
+               break;
+            }
         }
     }
-
-    if(flag ==1 or s.isEmpty()){
-        cout<<"\n Not well parenterized!!!!";
+    if(flag == 1 || !s.isEmpty()){
+        cout<<"\nNot well parenthized!!";
     }
     else{
-        cout<<"\nWell parenterized!!!";
+        cout<<"\nWell parenthized";
     }
+
     return 0;
 }
